@@ -125,12 +125,12 @@ $(function() {
                             if(++cell.rightClickState > 2) {
                                 cell.rightClickState = 0;
                             }
+                            $cell.removeClass(bombStatus[1]);
+                            $cell.removeClass(bombStatus[2]);
                             // show the flag or the question mark
                             if(cell.rightClickState) {
                                 // remove the old class add the new one for the bomb state
-                                $cell.toggleClass(bombStatus[cell.rightClickState] + ' ' + bombStatus[cell.rightClickState-1]);
-                            } else {
-                                $cell.toggleClass(bombStatus[0], bombStatus[bombStatus.length-1]);
+                                $cell.addClass(bombStatus[cell.rightClickState]);
                             }
                         }
                     },

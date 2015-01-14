@@ -5,15 +5,15 @@
     border: 1px solid #333;
 }
 #game-board .cell-mine {
-    background-color: red;
+    background-color: red !important;
 }
 #game-board .cell-number {
     text-align: center;
     line-height: 20px;
-    background-color: #fff;
+    background-color: #fff !important;
 }
 #game-board .cell-empty {
-    background-color: white;
+    background-color: white !important;
 }
 
 #game-board .mine-flagged {
