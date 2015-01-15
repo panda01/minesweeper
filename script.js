@@ -7,6 +7,7 @@ $(function() {
             MINES: 15
         };
         var $board = $('#game-board'),
+            $conf = $('#conf'),
             board = [],
             gameTimer = null,
             that = this,
@@ -32,7 +33,7 @@ $(function() {
                 makeElement('div.header')
                     .append(makeElement('div.smiley-face.action'))
                     .append(makeElement('div.mines-count.pull-left'))
-                    .append(makeElement('div.time.pull-right'))
+                    .append(makeElement('div.time'))
                     .appendTo($board);
 
                 // incase we're reseting the game
@@ -110,7 +111,8 @@ $(function() {
                             return prev;
                         }, 0);
                     },
-                    bombStatus = [null, 'mine-flagged', 'mine-suspected'];
+                    bombStatus = [null, 'mine-flagged', 'mine-suspected'],
+                    $smiley = $board.find('.smiley-face');
                 // disable right click menu
                 document.oncontextmenu = function() {return false;};
 
@@ -118,28 +120,35 @@ $(function() {
                     // handle the right click event
                     'mouseup.minesweeper': function(evt) {
                         var $cell = $(evt.target),
-                            cell = board[$cell.data('y')][$cell.data('x')];
+                            cell = $cell.hasClass('cell') ? board[$cell.data('y')][$cell.data('x')] : false;
 
-                        // if it is clicked with the right click button
-                        if(evt.button === 2) {
-                            if(++cell.rightClickState > 2) {
-                                cell.rightClickState = 0;
-                            }
-                            $cell.removeClass(bombStatus[1]);
-                            $cell.removeClass(bombStatus[2]);
-                            // show the flag or the question mark
-                            if(cell.rightClickState) {
-                                // remove the old class add the new one for the bomb state
-                                $cell.addClass(bombStatus[cell.rightClickState]);
+                        if(cell) {
+                            // if it is clicked with the right click button
+                            if(evt.button === 2) {
+                                if(++cell.rightClickState > 2) {
+                                    cell.rightClickState = 0;
+                                }
+                                $cell.removeClass(bombStatus[1]);
+                                $cell.removeClass(bombStatus[2]);
+                                // show the flag or the question mark
+                                if(cell.rightClickState) {
+                                    // remove the old class add the new one for the bomb state
+                                    $cell.addClass(bombStatus[cell.rightClickState]);
+                                }
+                            } else if(evt.button === 0) {
+                                $smiley.removeClass('uh-oh');
                             }
                         }
                     },
+                    'mousedown.minesweeper': function(evt) {
+                        $smiley.addClass('uh-oh'); 
+                    },
                     'click.minesweeper': function(evt) {
                         var $cell = $(evt.target),
-                            cell = board[$cell.data('y')][$cell.data('x')];
+                            cell = $cell.hasClass('cell') ? board[$cell.data('y')][$cell.data('x')] : false;
 
                         // if the cell has already been clicked, and it's not a right click no need to do anything else
-                        if(cell.rightClickState === 1 || (cell.isClicked && evt.button !== 2)) {
+                        if(!cell || cell.rightClickState === 1 || (cell.isClicked && evt.button !== 2)) {
                             return;
                         }
 
@@ -153,6 +162,7 @@ $(function() {
                             if(cell.isMine) {
                                 // game over condition
                                 $cell.addClass('cell-mine');
+                                $smiley.addClass('dead');
                                 that.endGame();
                             } else {
                                 if(numberOfSurroundingMines(cell)) {
@@ -176,11 +186,11 @@ $(function() {
                 }, '.cell');
 
                 $board.on({
-                    click: function() {
+                    'click.minesweeper': function() {
                         that.startGame();
                     }
                 }, '.action')
-                $('#conf').submit(function() {
+                $conf.submit(function() {
                     that.startGame();
                 });
             },
@@ -200,7 +210,7 @@ $(function() {
                 }
             },
             initConfig = function() {
-                $("#conf .form-control").map(function(idx, item) {
+                $conf.find('.form-control').map(function(idx, item) {
                     var $el = $(item),
                         which = $el.attr('id').toUpperCase();
                     if($el.val().length) {
@@ -230,6 +240,8 @@ $(function() {
             // stop the clock
             clearInterval(gameTimer);
             // cancel all events
+            $board.off('.minesweeper');
+            $conf.off('.minesweeper');
         };
 
         this.startGame();

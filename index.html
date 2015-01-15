@@ -9,25 +9,20 @@
         <div class="container">
             <h1>Minesweeper</h1>
             <div id="game-board"></div>
-            <form id="conf" class="form-horizontal pull-left">
+            <!-- to do, move this form to inside of minesweeper || move all of the html here-->
+            <form id="conf" class="pull-left">
                 <p>To make changes take affect click the smiley face</p>
                 <div class="form-group">
-                    <label for="width" class="col-sm-6 control-label">Width</label>
-                    <div class="col-sm-6">
-                        <input type="number" id="width" class="form-control" />
-                    </div>
+                    <label for="width" class="col-sm-4 control-label">Width</label>
+                    <input type="number" id="width" class="form-control" />
                 </div>
                 <div class="form-group">
-                    <label for="height" class="col-sm-6 control-label">Height</label>
-                    <div class="col-sm-6">
+                    <label for="height" class="col-sm-4 control-label">Height</label>
                         <input type="number" id="height" class="form-control" />
-                    </div>
                 </div>
                 <div class="form-group">
-                    <label for="mines" class="col-sm-6 control-label"># of Mines</label>
-                    <div class="col-sm-6">
-                        <input type="number" id="mines" class="form-control" />
-                    </div>
+                    <label for="mines" class="col-sm-4 control-label"># of Mines</label>
+                    <input type="number" id="mines" class="form-control" />
                 </div>
             </form>
         </div>
